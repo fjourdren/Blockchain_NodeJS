@@ -1,14 +1,24 @@
 {
-  "name": "Blockchain test",
+  "name": "Blockchain",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./node_modules/forever/bin/forever start build/index.js",
+    "stop": "node ./node_modules/forever/bin/forever stop build/index.js",
+    "dev": "./node_modules/.bin/nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --copy-files --out-dir build src",
+    "buildAndRun": "npm build && npm start"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "crypto-js": "^3.1.9-1"
+    "crypto-js": "^3.1.9-1",
+    "forever": "^0.15.3"
+  },
+  "devDependencies": {
+    "babel-preset-es2017": "^6.24.1",
+    "nodemon": "^1.14.11"
   }
 }
