@@ -2,10 +2,18 @@ Test to create a blockchain (just mine blocks in local). This project doesn't in
 
 ## Installation
 ```
+npm install babel-cli --global
 npm install
 ```
 
 ## Usage
+### In dev or CLI usage
 ```
-node index.js
+npm run dev
+```
+
+### Background run
+```
+npm run start
+npm run stop
 ```

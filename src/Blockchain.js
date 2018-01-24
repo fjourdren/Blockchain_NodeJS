@@ -1,16 +1,5 @@
-const SHA256 = require('crypto-js/sha256')
-
-
-
-function getTime() {
-  return new Date().getTime() / 1000;
-}
-
-function getTimeRound() {
-  return Math.round(getTime());
-}
-
-
+const Block = require('./Block'),
+      Utils = require('./Utils');
 
 class BlockChain {
 
@@ -23,7 +12,7 @@ class BlockChain {
   }
 
   createGenesisBlock() {
-    let block = new Block(0, getTimeRound(), "", this.difficulty);
+    let block = new Block(0, Utils.getTimeRound(), "", this.difficulty);
     block.mineHash();
     return block;
   }
@@ -128,91 +117,4 @@ class BlockChain {
 }
 
 
-
-class Block {
-
-  constructor(index, timestamp, data, difficulty, previousHash = '') {
-    this.index = index;
-    this.timestamp = timestamp;
-    this.data = data;
-    this.difficulty = difficulty;
-    this.previousHash = previousHash;
-    this.nonce = 0;
-    this.hash = 0;
-  }
-
-  isBlockValid() {
-    var start = "";
-
-    for(var i = 0; i < this.difficulty; i++) {
-      start = start + "" + 0;
-    }
-
-
-    if(this.hash != this.calculateHash()) {
-      return false;
-    }
-
-    if(this.hash.substring(0, this.difficulty) != start) {
-      return false;
-    }
-
-    if(this.hash.substring(this.difficulty, this.difficulty + 1) == 0) {
-      return false;
-    }
-
-    return true;
-
-  }
-
-  calculateHash() {
-    return SHA256(this.index + this.nonce + this.previousHash + this.difficulty + this.timestamp + JSON.stringify(this.data)).toString();
-  }
-
-  mineHash() {
-    let startMiningBlock = getTime();
-
-    let hash = "";
-    let start = "";
-
-    for(let i = 0; i < this.difficulty; i++) {
-      start = start + "" + 0;
-    }
-
-
-    let number = 0;
-    while((hash.substring(0, this.difficulty) != start) || (hash.substring(this.difficulty, this.difficulty + 1) == 0)) {
-      this.nonce = Math.round(Math.random() * (4294967296 - 0) + 0); //nonce 32 bits
-      hash = this.calculateHash();
-    }
-
-
-
-    this.hash = hash;
-    
-
-
-    let timeToMine = getTime() - startMiningBlock;
-    console.log("Block #" + this.index + " difficulty(" + this.difficulty + ") mined in " + timeToMine + "s with nonce " + this.nonce + " (" + this.hash + ")");
-  }
-
-}
-
-
-
-
-
-
-//nbBlocksForDifficultyCalculation (200 blocks), timeBeetweenTwoBlock (20s), default difficulty (4)
-var blockChain = new BlockChain(200, 20, 4);
-
-
-
-var run = true;
-while(run) {
-  var index = blockChain.getLatestBlock().index + 1;
-  var block = new Block(index, getTimeRound(), "Content #" + index, blockChain.difficulty);
-  block.previousHash = blockChain.getLatestBlock().hash;
-  block.mineHash();
-  blockChain.addBlock(block);
-}
+module.exports = BlockChain;
